@@ -7,5 +7,8 @@
 /dataSources/
 /dataSources.local.xml
 
+# Cache files
+__pycache__/
+
 # Pycharm
 .idea/
