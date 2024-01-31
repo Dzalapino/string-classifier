@@ -19,7 +19,7 @@ def generate_string(length: int, letters: list[str]) -> str:
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-def matches_regex(s: str, regex: str) -> bool:
+def contains_regex(s: str, regex: str) -> bool:
     """
     Checks if a given string contains a given regular expression
     :param s: The string to check
@@ -54,15 +54,15 @@ def generate_dataset(dataset_size=10000, string_length=15, from_letters=None,
         s = generate_string(string_length, from_letters)
 
         # Check if the string matches the regular expression
-        if matches_regex(s, matching_regex):
+        if contains_regex(s, matching_regex):
             # Check if there is still room for more matching strings
             if matching_count < half_size:
-                data.append((s, True))
+                data.append((s, 1))
                 matching_count += 1
         else:
             # Check if there is still room for more non-matching strings
             if not_matching_count < dataset_size - half_size:  # Possibility of not even dataset size
-                data.append((s, False))
+                data.append((s, 0))
                 not_matching_count += 1
 
         print(f'\r    Generated {len(data)} strings out of {dataset_size}...', end='', flush=False)
@@ -70,15 +70,15 @@ def generate_dataset(dataset_size=10000, string_length=15, from_letters=None,
     print('\nDataset generated successfully!\nSaving dataset separated to train and test parts to file...')
 
     df = pd.DataFrame(data, columns=['string', 'matches_regex'])  # Create a DataFrame from the data
-    df = df.sample(frac=1).reset_index(drop=True)  # Shuffle the dataset
+    df = df.sample(frac=1, random_state=42).reset_index(drop=True)  # Shuffle the dataset
     df.to_csv('strings_dataset.csv', index=False)  # Save the dataset to a file
 
     return df
 
 
-def get_dataset_from_file(file_name: str) -> pd.DataFrame:
+def load_dataset_from_file(file_name: str) -> pd.DataFrame:
     """
-    Returns a dataset from a file
+    Returns a dataset from a file without indexing the rows
     :param file_name: The name of the file to read the dataset from
     :return: The dataset read from the file
     """
