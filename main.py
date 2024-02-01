@@ -4,6 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv1D, MaxPooling1D, Flatten
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow import one_hot
+import numpy as np
 
 
 def create_basic_model() -> Sequential:  # Simple model with one filter
@@ -96,6 +97,8 @@ def main():
 
     print('\nEvaluate the experimental model')
     experimental_model.evaluate(test_x, test_y)
+
+    np.set_printoptions(suppress=True)
 
     print('\nMake predictions')
     experimental_predictions = experimental_model.predict(test_x[:10])
